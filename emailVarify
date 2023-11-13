@@ -1,0 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
+
+Future<bool> emailVarify(
+  DocumentReference? currentUser,
+) async {
+  final check = await FirebaseAuth.instance.currentUser!.emailVerified;
+  return check;
+}
