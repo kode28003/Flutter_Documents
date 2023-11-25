@@ -1,0 +1,239 @@
+// Automatic FlutterFlow imports
+import '/backend/backend.dart';
+import '/flutter_flow/flutter_flow_theme.dart';
+import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart'; // Imports other custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
+import 'package:flutter/material.dart';
+// Begin custom action code
+// DO NOT REMOVE OR MODIFY THE CODE ABOVE!
+
+
+/// DocumentReferenceから各フィールドを取得して、分岐するコード
+
+
+Future<int> displayDocumentNumber(
+  List<DocumentReference> trialsDocuments,
+  bool onSearching,
+  List<DocumentReference> algoliaDocuments,
+  DocumentReference myExtractCondition,
+) async {
+  if (onSearching == false) {
+    return trialsDocuments.length;
+  } else {
+    int displayDocumentCount = 0;
+    DocumentSnapshot myConditionDate = await myExtractCondition.get();
+    dynamic conditionDate = myConditionDate.data();
+
+    if (conditionDate['condition_free'] == null ||
+        conditionDate['condition_free'] == "") {
+      //normal search
+      for (DocumentReference trialsDocument in trialsDocuments) {
+        try {
+          DocumentSnapshot document = await trialsDocument.get();
+          if (document.exists) {
+            dynamic date = document.data();
+            if (date != null && date is Map<String, dynamic>) {
+              if (date['sex'] == '両方' ||
+                  date['sex'] == conditionDate['condition_sex'] ||
+                  conditionDate['condition_sex'] == '両方') {
+                if (date['age_from'] <= conditionDate['condition_age'] &&
+                    date['age_to'] >= conditionDate['condition_age']) {
+                  bool containsTargetString = false;
+                  for (String element in conditionDate['condition_trialtype']) {
+                    if (element == date['trial_type']) {
+                      containsTargetString = true;
+                      break;
+                    }
+                  }
+
+                  if (containsTargetString == true) {
+                    bool containsTargetString2 = false;
+                    for (String element
+                        in conditionDate['condition_trialdatetype']) {
+                      if (element == date['trial_date_type']) {
+                        containsTargetString2 = true;
+                        break;
+                      }
+                    }
+
+                    if (containsTargetString2 == true) {
+                      if (conditionDate['condition_reward_from'] <=
+                              date['reward_amount'] &&
+                          conditionDate['condition_reward_to'] >=
+                              date['reward_amount']) {
+                        bool containsTargetString3 = false;
+                        for (String element
+                            in conditionDate['condition_disease']) {
+                          if (element == date['trial_target_disease']) {
+                            containsTargetString3 = true;
+                            break;
+                          }
+                        }
+                        if (containsTargetString3 == true) {
+                          bool compareList = false;
+                          Set<dynamic> set1 = date['trial_locations'].toSet();
+                          for (var element
+                              in conditionDate['condition_prefecture']) {
+                            if (set1.contains(element)) {
+                              compareList = true;
+                              break;
+                            }
+                          } //
+                          if (compareList == true) {
+                            Timestamp trial_date_from = date['trial_date_from'];
+                            DateTime trial_date_from_dateTime =
+                                trial_date_from.toDate();
+                            //
+                            Timestamp trial_date_to = date['trial_date_to'];
+                            DateTime trial_date_to_dateTime =
+                                trial_date_to.toDate();
+                            //
+                            Timestamp condition_trialdate_from =
+                                conditionDate['condition_trialdate_from'];
+                            DateTime condition_trialdate_from_dateTime =
+                                condition_trialdate_from.toDate();
+                            //
+                            Timestamp condition_trialdate_to =
+                                conditionDate['condition_trialdate_to'];
+                            DateTime condition_trialdate_to_dateTime =
+                                condition_trialdate_to.toDate();
+
+                            if (condition_trialdate_from_dateTime <=
+                                        trial_date_from_dateTime &&
+                                    condition_trialdate_to_dateTime >=
+                                        trial_date_from_dateTime ||
+                                trial_date_from_dateTime <=
+                                        condition_trialdate_from_dateTime &&
+                                    trial_date_to_dateTime >=
+                                        condition_trialdate_to_dateTime ||
+                                condition_trialdate_from_dateTime <=
+                                        trial_date_to_dateTime &&
+                                    condition_trialdate_to_dateTime >=
+                                        trial_date_to_dateTime ||
+                                condition_trialdate_from_dateTime <=
+                                        trial_date_from_dateTime &&
+                                    trial_date_to_dateTime <=
+                                        condition_trialdate_to_dateTime) {
+                              displayDocumentCount++;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch (error) {
+          return 4645;
+        }
+      }
+    } else {
+      for (DocumentReference algoliaDocument in algoliaDocuments) {
+        try {
+          DocumentSnapshot document = await algoliaDocument.get();
+          if (document.exists) {
+            dynamic date = document.data();
+            if (date != null && date is Map<String, dynamic>) {
+              if (date['sex'] == '両方' ||
+                  date['sex'] == conditionDate['condition_sex'] ||
+                  conditionDate['condition_sex'] == '両方') {
+                if (date['age_from'] <= conditionDate['condition_age'] &&
+                    date['age_to'] >= conditionDate['condition_age']) {
+                  bool containsTargetString = false;
+                  for (String element in conditionDate['condition_trialtype']) {
+                    if (element == date['trial_type']) {
+                      containsTargetString = true;
+                      break;
+                    }
+                  }
+
+                  if (containsTargetString == true) {
+                    bool containsTargetString2 = false;
+                    for (String element
+                        in conditionDate['condition_trialdatetype']) {
+                      if (element == date['trial_date_type']) {
+                        containsTargetString2 = true;
+                        break;
+                      }
+                    }
+
+                    if (containsTargetString2 == true) {
+                      if (conditionDate['condition_reward_from'] <=
+                              date['reward_amount'] &&
+                          conditionDate['condition_reward_to'] >=
+                              date['reward_amount']) {
+                        bool containsTargetString3 = false;
+                        for (String element
+                            in conditionDate['condition_disease']) {
+                          if (element == date['trial_target_disease']) {
+                            containsTargetString3 = true;
+                            break;
+                          }
+                        }
+                        if (containsTargetString3 == true) {
+                          bool compareList = false;
+                          Set<dynamic> set1 = date['trial_locations'].toSet();
+                          for (var element
+                              in conditionDate['condition_prefecture']) {
+                            if (set1.contains(element)) {
+                              compareList = true;
+                              break;
+                            }
+                          } //
+                          if (compareList == true) {
+                            Timestamp trial_date_from = date['trial_date_from'];
+                            DateTime trial_date_from_dateTime =
+                                trial_date_from.toDate();
+                            //
+                            Timestamp trial_date_to = date['trial_date_to'];
+                            DateTime trial_date_to_dateTime =
+                                trial_date_to.toDate();
+                            //
+                            Timestamp condition_trialdate_from =
+                                conditionDate['condition_trialdate_from'];
+                            DateTime condition_trialdate_from_dateTime =
+                                condition_trialdate_from.toDate();
+                            //
+                            Timestamp condition_trialdate_to =
+                                conditionDate['condition_trialdate_to'];
+                            DateTime condition_trialdate_to_dateTime =
+                                condition_trialdate_to.toDate();
+
+                            if (condition_trialdate_from_dateTime <=
+                                        trial_date_from_dateTime &&
+                                    condition_trialdate_to_dateTime >=
+                                        trial_date_from_dateTime ||
+                                trial_date_from_dateTime <=
+                                        condition_trialdate_from_dateTime &&
+                                    trial_date_to_dateTime >=
+                                        condition_trialdate_to_dateTime ||
+                                condition_trialdate_from_dateTime <=
+                                        trial_date_to_dateTime &&
+                                    condition_trialdate_to_dateTime >=
+                                        trial_date_to_dateTime ||
+                                condition_trialdate_from_dateTime <=
+                                        trial_date_from_dateTime &&
+                                    trial_date_to_dateTime <=
+                                        condition_trialdate_to_dateTime) {
+                              displayDocumentCount++;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        } catch (error) {
+          return 464444;
+        }
+      }
+    }
+    return displayDocumentCount;
+  }
+}
